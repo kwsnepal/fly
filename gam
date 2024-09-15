@@ -1,0 +1,74 @@
+import pygame
+import random
+
+# Initialize Pygame
+pygame.init()
+
+# Set up display
+screen_width = 800
+screen_height = 600
+screen = pygame.display.set_mode((screen_width, screen_height))
+pygame.display.set_caption("Aeroplane Game")
+
+# Colors
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+RED = (255, 0, 0)
+
+# Aeroplane settings
+plane_width = 60
+plane_height = 40
+plane_x = 50
+plane_y = screen_height // 2
+plane_speed = 5
+
+# Obstacle settings
+obstacle_width = 70
+obstacle_height = random.randint(150, 400)
+obstacle_x = screen_width
+obstacle_y = random.randint(0, screen_height - obstacle_height)
+obstacle_speed = 7
+
+# Game clock
+clock = pygame.time.Clock()
+
+# Font
+font = pygame.font.SysFont(None, 55)
+
+def draw_plane(x, y):
+    pygame.draw.rect(screen, BLACK, [x, y, plane_width, plane_height])
+
+def draw_obstacle(x, y, width, height):
+    pygame.draw.rect(screen, RED, [x, y, width, height])
+
+def game_over():
+    text = font.render("Game Over", True, RED)
+    screen.blit(text, [screen_width // 3, screen_height // 3])
+    pygame.display.update()
+    pygame.time.wait(2000)
+    pygame.quit()
+    quit()
+
+# Game loop
+def game_loop():
+    global plane_y, obstacle_x, obstacle_y, obstacle_height
+    score = 0
+    game_running = True
+    
+    while game_running:
+        # Event handling
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                game_running = False
+
+        # Control plane movement
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_UP]:
+            plane_y -= plane_speed
+        if keys[pygame.K_DOWN]:
+            plane_y += plane_speed
+
+        # Move the obstacle
+        obstacle_x -= obstacle_speed
+        if obstacle_x < -obstacle_width:
+            obstacle_x = screen_width
